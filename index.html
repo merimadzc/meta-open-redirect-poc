@@ -1,0 +1,343 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Demo Source Page – Security Research</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <style>
+    :root {
+      --bg: #0f172a;
+      --card-bg: #020617;
+      --accent: #2563eb;
+      --accent-soft: rgba(37, 99, 235, 0.12);
+      --text: #e5e7eb;
+      --muted: #9ca3af;
+      --danger: #f97316;
+      --border: #1e293b;
+    }
+
+    * {
+      box-sizing: border-box;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: radial-gradient(circle at top, #1e293b 0, #020617 55%, #000 100%);
+      color: var(--text);
+    }
+
+    .wrapper {
+      width: 100%;
+      max-width: 420px;
+      padding: 24px;
+    }
+
+    .card {
+      background: linear-gradient(145deg, rgba(15,23,42,0.98), rgba(15,23,42,0.94));
+      border-radius: 18px;
+      border: 1px solid var(--border);
+      box-shadow: 0 22px 60px rgba(15,23,42,0.9);
+      padding: 22px 20px 18px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .card::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(circle at top left, rgba(37,99,235,0.26), transparent 55%);
+      opacity: 0.7;
+      pointer-events: none;
+    }
+
+    .badge-meta {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 4px 9px;
+      border-radius: 999px;
+      background: rgba(15,23,42,0.9);
+      border: 1px solid rgba(148,163,184,0.35);
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--muted);
+    }
+
+    .badge-dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 999px;
+      background: #22c55e;
+      box-shadow: 0 0 0 4px rgba(34,197,94,0.25);
+    }
+
+    .title {
+      margin: 12px 0 4px;
+      font-size: 20px;
+      font-weight: 600;
+      letter-spacing: -0.02em;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .title span.model {
+      font-size: 13px;
+      font-weight: 500;
+      padding: 2px 7px;
+      border-radius: 999px;
+      background: rgba(15,23,42,0.9);
+      border: 1px solid rgba(148,163,184,0.4);
+      color: var(--muted);
+    }
+
+    .subtitle {
+      font-size: 13px;
+      color: var(--muted);
+      margin-bottom: 14px;
+    }
+
+    .warning {
+      background: rgba(248,113,113,0.08);
+      border-radius: 12px;
+      border: 1px solid rgba(248,113,113,0.5);
+      padding: 10px 11px;
+      font-size: 12px;
+      display: flex;
+      gap: 8px;
+      margin-bottom: 16px;
+    }
+
+    .warning-icon {
+      font-size: 16px;
+      line-height: 1;
+    }
+
+    .warning strong {
+      color: #fed7aa;
+      display: block;
+      margin-bottom: 2px;
+    }
+
+    .fake-login-box {
+      border-radius: 14px;
+      border: 1px solid rgba(148,163,184,0.4);
+      background: radial-gradient(circle at top, rgba(37,99,235,0.22), rgba(15,23,42,0.96));
+      padding: 14px 13px 12px;
+      margin-bottom: 12px;
+    }
+
+    .fake-login-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 8px;
+    }
+
+    .fake-login-title {
+      font-size: 13px;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .service-pill {
+      padding: 2px 8px;
+      border-radius: 999px;
+      background: rgba(15,23,42,0.9);
+      border: 1px solid rgba(148,163,184,0.4);
+      font-size: 11px;
+      color: var(--muted);
+    }
+
+    .status-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 999px;
+      background: #22c55e;
+    }
+
+    .input-row {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      margin-bottom: 8px;
+    }
+
+    .field-label {
+      font-size: 11px;
+      color: var(--muted);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .field-label span.tag {
+      border-radius: 999px;
+      padding: 1px 7px;
+      border: 1px solid rgba(148,163,184,0.5);
+      font-size: 10px;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+    }
+
+    .fake-input {
+      border-radius: 9px;
+      border: 1px solid rgba(148,163,184,0.7);
+      padding: 7px 9px;
+      font-size: 12px;
+      background: rgba(15,23,42,0.9);
+      color: var(--muted);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .fake-input span.placeholder {
+      opacity: 0.85;
+    }
+
+    .fake-input span.disabled {
+      font-size: 11px;
+      opacity: 0.6;
+    }
+
+    .cta-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-top: 4px;
+    }
+
+    .btn-demo {
+      border-radius: 999px;
+      padding: 6px 13px;
+      border: none;
+      background: var(--accent);
+      color: white;
+      font-size: 12px;
+      font-weight: 500;
+      cursor: not-allowed;
+      box-shadow: 0 10px 30px rgba(37,99,235,0.6);
+    }
+
+    .cta-note {
+      font-size: 11px;
+      color: var(--muted);
+      max-width: 60%;
+      text-align: right;
+    }
+
+    .meta-info {
+      margin-top: 10px;
+      font-size: 11px;
+      color: var(--muted);
+      border-top: 1px dashed rgba(51,65,85,0.8);
+      padding-top: 8px;
+    }
+
+    .meta-info code {
+      font-size: 10px;
+      background: rgba(15,23,42,0.9);
+      border-radius: 6px;
+      padding: 2px 4px;
+      border: 1px solid rgba(30,64,175,0.8);
+      color: #bfdbfe;
+    }
+
+    .meta-info ul {
+      padding-left: 16px;
+      margin: 6px 0 0;
+    }
+
+    .meta-info li {
+      margin-bottom: 2px;
+    }
+  </style>
+</head>
+<body>
+  <div class="wrapper">
+    <div class="card">
+      <div class="badge-meta">
+        <span class="badge-dot"></span>
+        Meta AI – Security Research Demo
+      </div>
+
+      <div class="title">
+        External Source Preview
+        <span class="model">Demo only</span>
+      </div>
+
+      <div class="subtitle">
+        This page demonstrates how a user can be silently redirected from a trusted Meta AI “Source” link
+        to attacker-controlled content.
+      </div>
+
+      <div class="warning">
+        <div class="warning-icon">⚠️</div>
+        <div>
+          <strong>Security research demo – NOT a real login.</strong>
+          Do not enter any real credentials here. This page is only used to prove how the open redirect can be abused.
+        </div>
+      </div>
+
+      <div class="fake-login-box">
+        <div class="fake-login-header">
+          <div class="fake-login-title">
+            <div class="status-dot"></div>
+            Example “Account Verification”
+          </div>
+          <div class="service-pill">Imitated UI</div>
+        </div>
+
+        <div class="input-row">
+          <div class="field-label">
+            <span>Username / Email</span>
+            <span class="tag">Demo</span>
+          </div>
+          <div class="fake-input">
+            <span class="placeholder">example@demo-user.test</span>
+            <span class="disabled">read-only</span>
+          </div>
+        </div>
+
+        <div class="input-row">
+          <div class="field-label">
+            <span>Password</span>
+            <span class="tag">Not real</span>
+          </div>
+          <div class="fake-input">
+            <span class="placeholder">••••••••••••</span>
+            <span class="disabled">disabled</span>
+          </div>
+        </div>
+
+        <div class="cta-row">
+          <button class="btn-demo" disabled>Continue (Demo only)</button>
+          <div class="cta-note">
+            In a real attack, this button would submit credentials
+            to an attacker. Here it is deliberately disabled.
+          </div>
+        </div>
+      </div>
+
+      <div class="meta-info">
+        <div><strong>What this PoC proves:</strong></div>
+        <ul>
+          <li>User is redirected through <code>l.meta.ai</code> with a Meta-signed URL.</li>
+          <li>The final content is fully attacker-controlled.</li>
+          <li>No interaction with the Meta AI model is required after one initial click.</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</body>
+</html>
